@@ -11,9 +11,14 @@ public class Main {
         char[][] gameField = new char[level][level];
         fillGameField(gameField,level);
 	    drawGameField(gameField,level);
-        doUserMove(gameField,scanner,level);
+	    do {
+	        if (!checkDraw(gameField,level)) break;
+	    doUserMove(gameField,scanner,level);
         System.out.println();
-        doAIMove(gameField,level);
+            if (!checkDraw(gameField,level)) break;
+        doAIMove(gameField,level);}
+        while (checkDraw(gameField,level));
+
 
     }
 
@@ -33,16 +38,18 @@ public class Main {
         }
     }
 
-    public static void doUserMove (char[][] gameField, Scanner scanner, byte size){
-        int X,Y;
-        do {
-            System.out.println("Введите координату X от 0 до " + size);
-            X = scanner.nextInt()-1;
-        } while (checkCoordinate(X,size));
-        do {
-            System.out.println("Введите координату Y от 0 до " + size);
-            Y = scanner.nextInt()-1;
-        } while (checkCoordinate(Y,size) && checkMove(gameField,X,Y));
+    public static void doUserMove (char[][] gameField, Scanner scanner, byte size) {
+        int X, Y;
+        do{
+            do {
+                System.out.println("Введите координату X от 0 до " + size);
+                X = scanner.nextInt() - 1;
+            } while (checkCoordinate(X, size));
+            do {
+                System.out.println("Введите координату Y от 0 до " + size);
+                Y = scanner.nextInt() - 1;
+            } while (checkCoordinate(Y, size));
+        } while (checkMove(gameField,X,Y));
         gameField[X][Y] = 'X';
         drawGameField(gameField,size);
 
@@ -59,10 +66,22 @@ public class Main {
     }
 
     public static boolean checkCoordinate (int coordinate, byte size){
-        return (coordinate > size || coordinate<0);
+        return (coordinate >= size || coordinate<0);
     }
     public static boolean checkMove (char[][] gameField,int X,int Y){
         return gameField[X][Y] != '-';
+    }
+
+    public static boolean checkDraw (char[][] gameField,int size){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (gameField[i][j] =='-'){
+                    return true;
+                }
+            }
+        }
+        System.out.println("У вас ничья!");
+        return false;
     }
 
 }
