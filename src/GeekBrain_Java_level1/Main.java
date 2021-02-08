@@ -12,12 +12,12 @@ public class Main {
         fillGameField(gameField,level);
 	    drawGameField(gameField,level);
 	    do {
-	        if (!checkDraw(gameField,level)) break;
-	    doUserMove(gameField,scanner,level);
-        System.out.println();
-            if (!checkDraw(gameField,level)) break;
-        doAIMove(gameField,level);}
-        while (checkDraw(gameField,level));
+            doUserMove(gameField, scanner, level);
+            if (checkNextMove(gameField, level, 'X', "Поздравляем Вы выйграли!")) break;
+            System.out.println();
+            doAIMove(gameField, level);
+            if (checkNextMove(gameField, level, 'O', "Вы проиграли!")) break;
+        }while (checkDraw(gameField,level));
 
 
     }
@@ -51,6 +51,7 @@ public class Main {
             } while (checkCoordinate(Y, size));
         } while (checkMove(gameField,X,Y));
         gameField[X][Y] = 'X';
+
         drawGameField(gameField,size);
 
     }
@@ -80,7 +81,58 @@ public class Main {
                 }
             }
         }
-        System.out.println("У вас ничья!");
+        return false;
+    }
+
+    public static boolean checkWin (char[][] gameField,char sign,String msg){
+        int countX=0, countY=0;
+        int countA=0,countB=0;
+        for (int i = 0; i<gameField.length;i++){
+            for (int j = 0;j<gameField[i].length; j++){
+                if (gameField[i][j]==sign){
+                    countX++;
+                }
+                if (countX == gameField.length) {
+                    System.out.println(msg);
+                    return true;
+                }
+            }
+            countX = 0;
+            if (gameField[i][i]==sign) {
+                countA++;
+            }
+            if (gameField[gameField.length-1-i][i]==sign){
+                countB++;
+            }
+            if (countA == gameField.length || countB==gameField.length){
+                System.out.println(msg);
+                return true;
+            }
+        }
+
+        for (int j = 0; j<gameField.length;j++) {
+            for (int i = 0; i < gameField.length; i++) {
+                if (gameField[i][j] == sign) {
+                    countY++;
+                }
+                if (countY == gameField.length) {
+                    System.out.println(msg);
+                    return true;
+                }
+            }
+            countY = 0;
+        }
+        return false;
+    }
+
+    public static boolean checkNextMove (char[][] gameField,int size,char sign, String msg){
+        if (checkWin(gameField,sign,msg)){
+            return true;
+        }
+        if (!checkDraw(gameField,size)){
+            System.out.println("У вас ничья!");
+            return true;
+        }
         return false;
     }
 
