@@ -6,17 +6,26 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        byte level = 3;
+        byte level = 5;
         Scanner scanner = new Scanner(System.in);
         char[][] gameField = new char[level][level];
         fillGameField(gameField,level);
 	    drawGameField(gameField,level);
 	    do {
-            doUserMove(gameField, scanner, level);
-            if (checkNextMove(gameField, level, 'X', "Поздравляем Вы выйграли!")) break;
+            System.out.println("Ход игрока 1");
+            doUserMove(gameField, scanner, level,'X');
+            if (checkNextMove(gameField, level, 'X', "Поздравляем выйграл игрок 1!")) break;
             System.out.println();
-            doAIMove(gameField, level);
+            System.out.println("Ход компьютера");
+            doAIMove(gameField, level,'O');
             if (checkNextMove(gameField, level, 'O', "Вы проиграли!")) break;
+            System.out.println("Ход игрока 2");
+            doUserMove(gameField, scanner, level,'Y');
+            if (checkNextMove(gameField, level, 'Y', "Поздравляем выйграл игрок 2!")) break;
+            System.out.println("Ход игрока 3");
+            doUserMove(gameField, scanner, level,'Z');
+            if (checkNextMove(gameField, level, 'Z', "Поздравляем выйграл игрок 3!")) break;
+
         }while (checkDraw(gameField,level));
 
 
@@ -38,7 +47,7 @@ public class Main {
         }
     }
 
-    public static void doUserMove (char[][] gameField, Scanner scanner, byte size) {
+    public static void doUserMove (char[][] gameField, Scanner scanner, byte size,char sign) {
         int X, Y;
         do{
             do {
@@ -50,19 +59,19 @@ public class Main {
                 Y = scanner.nextInt() - 1;
             } while (checkCoordinate(Y, size));
         } while (checkMove(gameField,X,Y));
-        gameField[X][Y] = 'X';
+        gameField[X][Y] = sign;
 
         drawGameField(gameField,size);
 
     }
-    public static void doAIMove(char[][] gameField,byte size){
+    public static void doAIMove(char[][] gameField,byte size,char sign){
         int X,Y;
         Random randNum = new Random();
         do {
             X = randNum.nextInt(gameField.length);
             Y = randNum.nextInt(gameField.length);
         } while (checkMove(gameField,X,Y));
-        gameField[X][Y] = 'O';
+        gameField[X][Y] = sign;
         drawGameField(gameField, size);
     }
 
